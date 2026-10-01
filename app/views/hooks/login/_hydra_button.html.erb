@@ -1,0 +1,7 @@
+<% 
+  opts = { script_name: OpenProject::Configuration.rails_relative_url_root } 
+  opts[:origin] = params["back_url"] if params["back_url"] 
+%> 
+<a href="<%= omni_auth_start_path(:hydra, opts) %>" class="auth-provider auth-provider-hydra button"> 
+  <span class="auth-provider-name">Sign into platform</span> 
+</a>

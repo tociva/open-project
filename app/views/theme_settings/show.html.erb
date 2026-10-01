@@ -1,0 +1,57 @@
+<% html_title "Theme" %>
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { "Theme" }
+    header.with_breadcrumbs(
+      [{ href: admin_index_path, text: t("label_administration") },
+       "Theme"]
+    )
+  end
+%>
+
+<p class="op-toast--content">
+  Pick the colours used across the interface. Leave a field blank to fall back
+  to the default styling for that element.
+</p>
+
+<%= styled_form_tag({ action: :update }, method: :post) do %>
+  <section class="form--section">
+    <% editable_colors.each do |variable, label| %>
+      <div class="form--field">
+        <label class="form--label" for="colors_<%= variable %>">
+          <%= label %>
+        </label>
+        <div class="form--field-container">
+          <div class="form--text-field-container">
+            <input type="color"
+                   id="colors_<%= variable %>_picker"
+                   value="<%= @colors[variable].presence || "#1a67a3" %>"
+                   onchange="document.getElementById('colors_<%= variable %>').value = this.value;"
+                   style="vertical-align: middle; height: 2rem; width: 3rem; padding: 0; border: 1px solid #ccc;">
+            <input type="text"
+                   id="colors_<%= variable %>"
+                   name="colors[<%= variable %>]"
+                   value="<%= @colors[variable] %>"
+                   placeholder="#RRGGBB"
+                   pattern="^#([A-Fa-f0-9]{6})$"
+                   class="form--text-field"
+                   style="max-width: 12rem; vertical-align: middle;">
+          </div>
+          <span class="form--field-instructions">
+            CSS variable: <code><%= variable %></code>
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="attributes-group">
+    <%= styled_button_tag "Save", class: "-primary" %>
+    <%= link_to "Reset to defaults",
+                { action: :reset },
+                method: :post,
+                class: "button",
+                data: { confirm: "Remove all colour overrides and restore the default theme?" } %>
+  </div>
+<% end %>
